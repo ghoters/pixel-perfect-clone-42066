@@ -46,8 +46,8 @@ function OrderPage() {
   const [delivery, setDelivery] = useState<Delivery>("parcel");
   const [parcelPoint, setParcelPoint] = useState("Warszawa, ul. Marszałkowska 142");
   const [carrier, setCarrier] = useState("InPost");
-  const [accepted, setAccepted] = useState(false);
-  const [portfolio, setPortfolio] = useState(false);
+  const [accepted, setAccepted] = useState(true);
+  const [portfolio, setPortfolio] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const [notes, setNotes] = useState("");
   const [preview, setPreview] = useState(0);
