@@ -314,12 +314,12 @@
 .order-agreements u { text-underline-offset: 2px; }
 .order-agreements .order-error { margin-left: 63px; }
 .order-sidebar { padding: 13px; }
-.order-sidebar-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 0 3px 9px; }
-.order-sidebar-top h2 { display: flex; align-items: center; gap: 9px; font-size: 16px; line-height: 1.2; font-weight: 800; }
-.order-sidebar-top h2 svg { width: 20px; height: 20px; color: var(--order-blue); }
-.order-sidebar-top a { height: 32px; padding: 0 11px; border-color: var(--order-outline); background: var(--order-soft); color: var(--order-blue); font-size: 11px; font-weight: 800; }
-.order-sidebar-top a svg { width: 12px; height: 12px; }
-.order-preview-image { display: block; width: 100%; aspect-ratio: 1.43; border-radius: 6px; object-fit: cover; }
+.order-preview-frame { position: relative; overflow: hidden; border: 1px solid var(--order-outline); border-radius: 6px; background: var(--order-soft); }
+.order-preview-image { display: block; width: 100%; aspect-ratio: 1.1157; object-fit: cover; }
+.order-preview-overlay { position: absolute; inset-inline: 0; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 12px; background: color-mix(in srgb, var(--order-soft) 55%, transparent); backdrop-filter: blur(4px); }
+.order-preview-label { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--order-muted); }
+.order-preview-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--order-blue); }
+.order-preview-badge { border: 1px solid color-mix(in srgb, var(--order-blue) 20%, transparent); background: color-mix(in srgb, var(--order-blue) 10%, transparent); color: var(--order-blue); border-radius: 999px; padding: 2px 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
 .order-dots { display: flex; justify-content: center; align-items: center; height: 30px; gap: 1px; }
 .order-dots button { height: 22px; width: 13px; min-width: 13px; padding: 0; border-radius: 50%; }
 .order-dots button span { display: block; height: 6px; width: 6px; border-radius: 50%; background: var(--order-outline); }
