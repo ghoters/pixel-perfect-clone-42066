@@ -243,7 +243,7 @@
 .order-intro .order-eyebrow { margin: 0; color: var(--primary); text-transform: uppercase; font-size: 12px; line-height: 16px; font-weight: 800; letter-spacing: .025em; }
 .order-intro h1 { margin-top: 8px; color: var(--foreground); font-size: 32px; line-height: 1.25; font-weight: 800; }
 .order-intro > p:last-child { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); }
-.order-progress { width: 100%; display: flex; align-items: center; gap: 8px; margin: 20px 0; padding-bottom: 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.order-progress { width: min(100%, 1224px); display: flex; align-items: center; gap: 8px; margin: 20px auto; padding-bottom: 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .order-progress-step { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; font-size: 11px; font-weight: 600; }
 .order-progress-step > span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; }
 .order-progress-step.is-current { color: var(--order-blue); font-weight: 800; }
