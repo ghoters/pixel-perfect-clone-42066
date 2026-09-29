@@ -227,6 +227,28 @@
   }
 }
 
+/* The configurator and preview form one centered workspace; the help rail sits beside it. */
+.offer-progress,
+.offer-workspace {
+  width: min(100%, 1300px);
+  margin-inline: auto;
+}
+
+@media (min-width: 1800px) {
+  .offer-workspace {
+    position: relative;
+  }
+
+  .offer-help-rail {
+    position: absolute;
+    top: 0;
+    right: calc(100% + 20px);
+    display: block;
+    width: 220px;
+    height: 100%;
+  }
+}
+
 /* Order-page recreation: tokens and layout are scoped so the original site stays unchanged. */
 .order-page {
   --order-ink: oklch(0.27 0.075 266);
@@ -259,7 +281,7 @@
   .order-intro h1 { font-size: 43.2px; }
 }
 @media (min-width: 1536px) {
-  .order-progress, .order-grid { width: calc(100% - 320px); margin-left: 320px; margin-right: 0; }
+  .order-progress, .order-grid { width: min(100%, 1300px); margin-inline: auto; }
   .order-grid { grid-template-columns: minmax(0, 1.55fr) minmax(380px, 1fr); }
 }
 .order-form-column { display: grid; gap: 14px; min-width: 0; }
