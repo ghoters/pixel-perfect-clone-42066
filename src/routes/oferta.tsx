@@ -28,7 +28,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { readFigurineConfig, saveFigurineConfig } from "@/lib/figurine-config";
+import { CONFIG_STORAGE_KEY, readFigurineConfig, saveFigurineConfig } from "@/lib/figurine-config";
+import { readOrderPhotos, saveOrderPhotos } from "@/lib/order-photos";
+import { OrderPhotoGallery } from "@/components/OrderPhotoGallery";
 import podgladFigurki from "@/assets/podglad-figurki-para-pies.jpg.asset.json";
 import osoba1Asset from "@/assets/osoba1.jpg.asset.json";
 import piesAsset from "@/assets/pies-nowy.jpg.asset.json";
@@ -460,7 +462,11 @@ function OfferPage() {
   const [finish, setFinish] = useState<string | null>(null);
   const [base, setBase] = useState<string | null>(null);
   const [pack, setPack] = useState<string | null>(null);
-  const [photoCount, setPhotoCount] = useState(0);
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photosReady, setPhotosReady] = useState(false);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState("");
+  const photoCount = photos.length;
   const [color, setColor] = useState<"white" | "beige" | "other">("white");
   const [colorText, setColorText] = useState("");
   const [colorCommitted, setColorCommitted] = useState(false);
@@ -541,11 +547,31 @@ function OfferPage() {
     setGraverText("");
     setGraverCommitted(false);
     cancelGraverReset();
-    setPhotoCount(0);
+    void updatePhotos([]);
+    window.sessionStorage.removeItem(CONFIG_STORAGE_KEY);
     setColor("white");
     setColorText("");
     setColorCommitted(false);
   };
+
+  async function updatePhotos(next: File[], warning = "") {
+    setPhotoBusy(true);
+    try {
+      await saveOrderPhotos(next);
+      setPhotos(next);
+      setPhotoError(warning);
+    } catch {
+      setPhotoError("Nie udało się zapisać zdjęć w przeglądarce. Spróbuj ponownie.");
+    } finally { setPhotoBusy(false); }
+  }
+
+  function addPhotos(selected: File[]) {
+    if (!photosReady || photoBusy || selected.length === 0) return;
+    const valid = selected.filter((file) => ["image/jpeg", "image/png"].includes(file.type) && file.size <= 10 * 1024 * 1024);
+    const warning = valid.length !== selected.length ? "Możesz dodać tylko zdjęcia JPG lub PNG o wielkości do 10 MB każde." : "";
+    if (valid.length) void updatePhotos([...photos, ...valid], warning);
+    else if (warning) setPhotoError(warning);
+  }
 
 
 
@@ -560,7 +586,7 @@ function OfferPage() {
       if (stored) {
         setSubjects(stored.subjects); setPersonCount(stored.personCount); setAnimalCount(stored.animalCount);
         setCustomText(stored.customText); setCustomCommitted(stored.customCommitted); setSize(stored.size);
-        setFinish(stored.finish); setBase(stored.base); setPack(stored.pack); setPhotoCount(stored.photoCount);
+        setFinish(stored.finish); setBase(stored.base); setPack(stored.pack);
         setColor(stored.color); setColorText(stored.colorText); setColorCommitted(stored.colorCommitted);
         setGraverText(stored.graverText); setGraverCommitted(stored.graverCommitted);
       }
@@ -577,6 +603,12 @@ function OfferPage() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    readOrderPhotos().then((files) => { if (mounted) setPhotos(files); }).catch(() => { if (mounted) setPhotoError("Nie udało się odczytać zdjęć. Dodaj je ponownie."); }).finally(() => { if (mounted) setPhotosReady(true); });
+    return () => { mounted = false; };
   }, []);
 
   return (
@@ -915,8 +947,8 @@ function OfferPage() {
             <section id="zdjecia" className={`border-t border-border p-5 transition-all duration-300 ${readySteps[5] ? "bg-card" : "bg-muted/40 opacity-60 saturate-50 pointer-events-none select-none"}`}>
               <StepHeading number={6} title="Zdjęcia" subtitle="Prześlij zdjęcia, na podstawie których wykonamy model 3D." active={activeSteps[5] && readySteps[5]} />
               <div className="grid gap-3.5 md:grid-cols-[1.45fr_.8fr]">
-                <label className={`flex min-h-[126px] cursor-pointer flex-col items-center justify-center rounded-md border border-dashed text-center transition-colors ${activeSteps[5] && readySteps[5] ? "border-primary/50 bg-secondary/30" : "border-border bg-muted/50"}`}>
-                  <input type="file" accept="image/jpeg,image/png" multiple className="sr-only" onChange={(event) => setPhotoCount(event.currentTarget.files?.length ?? 0)} />
+                <label onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); addPhotos(Array.from(event.dataTransfer.files)); }} className={`flex min-h-[126px] cursor-pointer flex-col items-center justify-center rounded-md border border-dashed text-center transition-colors ${activeSteps[5] && readySteps[5] ? "border-primary/50 bg-secondary/30" : "border-border bg-muted/50"}`}>
+                  <input type="file" accept="image/jpeg,image/png" multiple disabled={!photosReady || photoBusy} className="sr-only" onChange={(event) => { addPhotos(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} />
                   <UploadCloud className="size-7 text-primary" />
                   <span className="mt-2 text-xs font-semibold">Przeciągnij i upuść zdjęcia lub <span className="text-primary">wybierz pliki</span></span>
                   <span className="mt-1 text-[11px] text-muted-foreground">JPG, PNG (maks. 10 MB)</span>
@@ -929,6 +961,8 @@ function OfferPage() {
                   <a href="#zdjecia" className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-primary">Zobacz przykłady zdjęć <ArrowRight className="size-3" /></a>
                 </div>
               </div>
+              {photoError && <p role="alert" className="mt-2 text-xs text-destructive">{photoError}</p>}
+              {photos.length > 0 && <div className="mt-3"><p className="mb-2 text-xs font-semibold">Dodane zdjęcia ({photoCount})</p><OrderPhotoGallery files={photos} onRemove={(index) => { if (!photoBusy) void updatePhotos(photos.filter((_, current) => current !== index)); }} /></div>}
             </section>
           </div>
 
@@ -994,7 +1028,7 @@ function OfferPage() {
             <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-primary"><Package className="size-4" /> Darmowa wysyłka od 299 zł</p>
             <Button
               type="button"
-              disabled={!activeSteps.every(Boolean)}
+              disabled={!photosReady || photoBusy || !activeSteps.every(Boolean)}
               className="mt-3 h-12 w-full text-sm"
               onClick={() => {
                 saveFigurineConfig({ subjects, personCount, animalCount, customText, customCommitted, size, finish, base, pack, photoCount, color, colorText, colorCommitted, graverText, graverCommitted });

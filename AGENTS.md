@@ -12,3 +12,4 @@
 - Preserve the source project's three TanStack routes, shared components, CSS tokens and original image assets for visual parity; do not redesign the interface during migration.
 - Keep downloaded source-project media as newly uploaded local project asset pointers; source-project pointers are scoped to their original project.
 - Keep the reference-image redesign scoped to the order route and its `.order-page` styles so the other two source-faithful pages stay unchanged.
+- Store selected order photos in browser IndexedDB and keep only their count in the session configuration; image files exceed practical sessionStorage limits and must survive navigation between the two pages.
