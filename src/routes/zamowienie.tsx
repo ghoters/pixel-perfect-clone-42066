@@ -78,24 +78,23 @@ function OrderPage() {
   };
   const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
   const trackContact = (name: keyof typeof contact) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = name === "phone" ? event.target.value.replace(/[^\d]/g, "") : event.target.value;
+    const value = name === "phone" ? event.target.value.replace(/[^\d]/g, "").slice(0, 20) : event.target.value;
     if (name === "phone" && value !== event.target.value) event.target.value = value;
     setContact((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => {
       const next = { ...prev };
       const trimmed = value.trim();
-      if (!trimmed) { if (prev[name] === "To pole jest wymagane.") delete next[name]; return next; }
-      if (name === "email") {
-        if (isValidEmail(trimmed)) delete next["email"];
-        else next["email"] = trimmed.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
-        return next;
-      }
-      if (name === "phone") {
-        if (/^\d{9,15}$/.test(trimmed)) delete next["phone"];
-        else next["phone"] = "Numer telefonu może zawierać tylko cyfry (9–15).";
-        return next;
-      }
+      if (name === "email" && trimmed && !isValidEmail(trimmed)) return next;
       delete next[name];
+      return next;
+    });
+  };
+  const validateEmailOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const trimmed = event.target.value.trim();
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (!trimmed || isValidEmail(trimmed)) delete next["email"];
+      else next["email"] = trimmed.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
       return next;
     });
   };
@@ -108,8 +107,6 @@ function OrderPage() {
     required.forEach((name) => { if (!String(form.get(name) ?? "").trim()) nextErrors[name] = "To pole jest wymagane."; });
     const email = String(form.get("email") ?? "").trim();
     if (email && !isValidEmail(email)) nextErrors["email"] = email.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
-    const phone = String(form.get("phone") ?? "").trim();
-    if (phone && !/^\d{9,15}$/.test(phone)) nextErrors["phone"] = "Numer telefonu może zawierać tylko cyfry (9–15).";
     if (delivery === "parcel" && !parcelPoint) nextErrors["parcelPoint"] = "Wybierz paczkomat.";
     if (!accepted) nextErrors["accepted"] = "Zaznacz wymaganą zgodę.";
     setErrors(nextErrors);
