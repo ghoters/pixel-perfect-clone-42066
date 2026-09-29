@@ -315,7 +315,7 @@
 .order-agreements .order-error { margin-left: 63px; }
 .order-sidebar { padding: 13px; }
 .order-preview-frame { position: relative; overflow: hidden; border: 1px solid var(--order-outline); border-radius: 6px; background: var(--order-soft); }
-.order-preview-image { display: block; width: 100%; aspect-ratio: 1.1157; object-fit: cover; }
+.order-preview-image { display: block; width: 100%; aspect-ratio: 1.43; object-fit: cover; }
 .order-preview-overlay { position: absolute; inset-inline: 0; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 12px; background: color-mix(in srgb, var(--order-soft) 55%, transparent); backdrop-filter: blur(4px); }
 .order-preview-label { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--order-muted); }
 .order-preview-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--order-blue); }
