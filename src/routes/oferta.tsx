@@ -587,7 +587,7 @@ function OfferPage() {
         <h1 className="mt-2 text-[2rem] font-extrabold leading-tight lg:text-[2.7rem]">Stwórz swoją figurkę 3D</h1>
         <p className="mt-3 text-sm text-muted-foreground">Wybierz parametry swojej personalizowanej figurki. Każdy detal ma znaczenie.</p>
 
-        <div ref={stepBarRef} className={`offer-progress sticky top-[68px] z-40 mt-5 grid grid-cols-2 gap-y-3.5 border-b border-border bg-background ${stepBarStuck ? "pt-1.5 pb-1.5" : "pb-1.5"} sm:grid-cols-3 lg:grid-cols-6`}>
+        <div ref={stepBarRef} className={`sticky top-[68px] z-40 mt-5 grid grid-cols-2 gap-y-3.5 border-b border-border bg-background ${stepBarStuck ? "pt-1.5 pb-1.5" : "pb-1.5"} sm:grid-cols-3 lg:grid-cols-6`}>
           {progressSteps.map((label, index) => (
             <div key={label} className="flex items-center gap-2">
               <span className={`grid size-8 shrink-0 place-items-center rounded-full border text-[11px] font-bold transition-colors ${activeSteps[index] ? "border-primary bg-primary text-primary-foreground shadow" : "border-border bg-card text-foreground"}`}>{index + 1}</span>
@@ -608,8 +608,8 @@ function OfferPage() {
           ))}
         </div>
 
-        <div className="offer-workspace mt-5 grid items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(380px,1fr)]">
-          <div className="offer-help-rail hidden self-stretch">
+        <div className="mt-5 grid items-start gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(380px,1fr)] 2xl:grid-cols-[300px_minmax(0,1.55fr)_minmax(380px,1fr)]">
+          <div className="hidden 2xl:block 2xl:self-stretch">
             <div className="sticky top-[113px] flex max-h-[calc(100vh-160px)] flex-col overflow-y-auto justify-start">
               <HelpRail />
             </div>
