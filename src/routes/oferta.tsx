@@ -554,12 +554,12 @@ function OfferPage() {
     setColorCommitted(false);
   };
 
-  async function updatePhotos(next: File[]) {
+  async function updatePhotos(next: File[], warning = "") {
     setPhotoBusy(true);
     try {
       await saveOrderPhotos(next);
       setPhotos(next);
-      setPhotoError("");
+      setPhotoError(warning);
     } catch {
       setPhotoError("Nie udało się zapisać zdjęć w przeglądarce. Spróbuj ponownie.");
     } finally { setPhotoBusy(false); }
@@ -568,8 +568,9 @@ function OfferPage() {
   function addPhotos(selected: File[]) {
     if (!photosReady || photoBusy || selected.length === 0) return;
     const valid = selected.filter((file) => ["image/jpeg", "image/png"].includes(file.type) && file.size <= 10 * 1024 * 1024);
-    if (valid.length !== selected.length) setPhotoError("Możesz dodać tylko zdjęcia JPG lub PNG o wielkości do 10 MB każde.");
-    if (valid.length) void updatePhotos([...photos, ...valid]);
+    const warning = valid.length !== selected.length ? "Możesz dodać tylko zdjęcia JPG lub PNG o wielkości do 10 MB każde." : "";
+    if (valid.length) void updatePhotos([...photos, ...valid], warning);
+    else if (warning) setPhotoError(warning);
   }
 
 
