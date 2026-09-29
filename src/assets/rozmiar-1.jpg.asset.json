@@ -1,11 +1,11 @@
 {
-  "asset_id": "5891c7b4-6e18-4c0b-9f30-6f38acf75bf4",
-  "content_type": "image/jpeg",
-  "created_at": "2026-09-29T13:52:08Z",
+  "version": 1,
+  "asset_id": "68be4eea-65c9-489e-886e-563250ef9ba5",
+  "project_id": "24912a2c-9d00-4cce-88dd-8f785c36fc43",
+  "url": "/__l5e/assets-v1/68be4eea-65c9-489e-886e-563250ef9ba5/rozmiar-1.jpg",
+  "r2_key": "a/v1/24912a2c-9d00-4cce-88dd-8f785c36fc43/68be4eea-65c9-489e-886e-563250ef9ba5/rozmiar-1.jpg",
   "original_filename": "rozmiar-1.jpg",
-  "project_id": "00abb039-1d58-4f90-b91c-90aec1b03c9d",
-  "r2_key": "a/v1/00abb039-1d58-4f90-b91c-90aec1b03c9d/5891c7b4-6e18-4c0b-9f30-6f38acf75bf4/rozmiar-1.jpg",
   "size": 106291,
-  "url": "/__l5e/assets-v1/5891c7b4-6e18-4c0b-9f30-6f38acf75bf4/rozmiar-1.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-09-29T23:41:24Z"
 }

@@ -1,11 +1,11 @@
 {
-  "asset_id": "abfe9af2-7764-403e-85b8-32ed8adb1830",
-  "content_type": "image/jpeg",
-  "created_at": "2026-09-29T13:52:08Z",
+  "version": 1,
+  "asset_id": "e336639d-20f8-4897-a5de-3393ca75341f",
+  "project_id": "24912a2c-9d00-4cce-88dd-8f785c36fc43",
+  "url": "/__l5e/assets-v1/e336639d-20f8-4897-a5de-3393ca75341f/reczne-malowanie.jpg",
+  "r2_key": "a/v1/24912a2c-9d00-4cce-88dd-8f785c36fc43/e336639d-20f8-4897-a5de-3393ca75341f/reczne-malowanie.jpg",
   "original_filename": "reczne-malowanie.jpg",
-  "project_id": "00abb039-1d58-4f90-b91c-90aec1b03c9d",
-  "r2_key": "a/v1/00abb039-1d58-4f90-b91c-90aec1b03c9d/abfe9af2-7764-403e-85b8-32ed8adb1830/reczne-malowanie.jpg",
   "size": 575393,
-  "url": "/__l5e/assets-v1/abfe9af2-7764-403e-85b8-32ed8adb1830/reczne-malowanie.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-09-29T23:41:21Z"
 }
