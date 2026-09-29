@@ -79,6 +79,13 @@ function OrderPage() {
     setErrors((prev) => { const next = { ...prev }; delete next[name]; return next; });
   };
   const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  const emailError = (value: string) => {
+    if (!value.includes("@")) return "Błędny adres e-mail — brakuje znaku @.";
+    const afterAt = value.slice(value.indexOf("@") + 1);
+    if (!afterAt) return "Błędny adres e-mail — po znaku @ wpisz nazwę poczty, np. jan@gmail.com.";
+    if (!afterAt.includes(".")) return "Błędny adres e-mail — brakuje końcówki, np. .com lub .pl.";
+    return "Błędny adres e-mail.";
+  };
   const trackContact = (name: keyof typeof contact) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = name === "phone" ? event.target.value.replace(/[^\d]/g, "").slice(0, 20) : event.target.value;
     if (name === "phone" && value !== event.target.value) event.target.value = value;
