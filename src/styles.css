@@ -312,7 +312,8 @@
 .order-agreements .order-section-title { margin-bottom: 8px; }
 .order-agreements label { display: flex; align-items: flex-start; gap: 9px; margin-left: 38px; margin-top: 8px; font-size: 11px; line-height: 1.6; cursor: pointer; }
 .order-agreements u { text-underline-offset: 2px; }
-.order-agreements .order-error { margin-left: 63px; }
+.order-agreements .order-error { margin-left: 63px; min-height: 0; margin-top: 2px; }
+.order-agreements .order-error[aria-hidden='true'] { display: none; }
 .order-sidebar { padding: 13px; }
 .order-preview-frame { position: relative; overflow: hidden; border: 1px solid var(--order-outline); border-radius: 6px; background: var(--order-soft); }
 .order-preview-image { display: block; width: 100%; aspect-ratio: 1.43; object-fit: cover; }
