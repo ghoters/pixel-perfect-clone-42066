@@ -1,0 +1,26 @@
+{
+  "scope": "Visual frontend recreation of GitHub project ghoters/faf",
+  "capabilities": [
+    {
+      "capability": "Page structure, responsive styling and interactions",
+      "source": "src/routes, src/components, src/styles.css",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": null
+    },
+    {
+      "capability": "Original images and logo",
+      "source": "src/assets/*.asset.json",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": null
+    },
+    {
+      "capability": "Database, records, authentication and external providers",
+      "source": "No schema, backend, provider or environment variables detected",
+      "outcome": "not_applicable",
+      "status": "verified",
+      "next_action": null
+    }
+  ]
+}
