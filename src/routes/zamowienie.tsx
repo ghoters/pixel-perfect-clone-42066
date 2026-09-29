@@ -97,7 +97,7 @@ function OrderPage() {
     setErrors((prev) => {
       const next = { ...prev };
       if (!trimmed || isValidEmail(trimmed)) delete next["email"];
-      else next["email"] = trimmed.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
+      else next["email"] = emailError(trimmed);
       return next;
     });
   };
@@ -120,7 +120,7 @@ function OrderPage() {
     const fullName = String(form.get("fullName") ?? "").trim();
     if (fullName && !isTwoPartName(fullName)) nextErrors["fullName"] = nameError;
     const email = String(form.get("email") ?? "").trim();
-    if (email && !isValidEmail(email)) nextErrors["email"] = email.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
+    if (email && !isValidEmail(email)) nextErrors["email"] = emailError(email);
     if (delivery === "parcel" && !parcelPoint) nextErrors["parcelPoint"] = "Wybierz paczkomat.";
     if (!accepted) nextErrors["accepted"] = "Zaznacz wymaganą zgodę.";
     setErrors(nextErrors);
