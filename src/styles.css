@@ -312,7 +312,7 @@
 .order-agreements label { display: flex; align-items: flex-start; gap: 9px; margin-left: 38px; margin-top: 8px; font-size: 10px; line-height: 1.6; cursor: pointer; }
 .order-agreements u { text-underline-offset: 2px; }
 .order-agreements .order-error { margin-left: 63px; }
-.order-sidebar { margin-top: -54px; padding: 13px; }
+.order-sidebar { padding: 13px; }
 .order-sidebar-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 0 3px 9px; }
 .order-sidebar-top h2 { display: flex; align-items: center; gap: 9px; font-size: 16px; line-height: 1.2; font-weight: 800; }
 .order-sidebar-top h2 svg { width: 20px; height: 20px; color: var(--order-blue); }
