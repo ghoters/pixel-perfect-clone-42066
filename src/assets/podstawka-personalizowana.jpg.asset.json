@@ -1,11 +1,11 @@
 {
-  "asset_id": "85b0626a-dfa0-40ef-a150-237af3128a77",
-  "content_type": "image/jpeg",
-  "created_at": "2026-09-29T13:52:08Z",
+  "version": 1,
+  "asset_id": "026e3f73-9fba-4bb1-b746-40b164a7e922",
+  "project_id": "24912a2c-9d00-4cce-88dd-8f785c36fc43",
+  "url": "/__l5e/assets-v1/026e3f73-9fba-4bb1-b746-40b164a7e922/podstawka-personalizowana.jpg",
+  "r2_key": "a/v1/24912a2c-9d00-4cce-88dd-8f785c36fc43/026e3f73-9fba-4bb1-b746-40b164a7e922/podstawka-personalizowana.jpg",
   "original_filename": "podstawka-personalizowana.jpg",
-  "project_id": "00abb039-1d58-4f90-b91c-90aec1b03c9d",
-  "r2_key": "a/v1/00abb039-1d58-4f90-b91c-90aec1b03c9d/85b0626a-dfa0-40ef-a150-237af3128a77/podstawka-personalizowana.jpg",
   "size": 147488,
-  "url": "/__l5e/assets-v1/85b0626a-dfa0-40ef-a150-237af3128a77/podstawka-personalizowana.jpg",
-  "version": 1
+  "content_type": "image/jpeg",
+  "created_at": "2026-09-29T23:41:16Z"
 }
