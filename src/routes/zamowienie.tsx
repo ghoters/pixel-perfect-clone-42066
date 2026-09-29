@@ -78,24 +78,23 @@ function OrderPage() {
   };
   const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
   const trackContact = (name: keyof typeof contact) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = name === "phone" ? event.target.value.replace(/[^\d]/g, "") : event.target.value;
+    const value = name === "phone" ? event.target.value.replace(/[^\d]/g, "").slice(0, 20) : event.target.value;
     if (name === "phone" && value !== event.target.value) event.target.value = value;
     setContact((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => {
       const next = { ...prev };
       const trimmed = value.trim();
-      if (!trimmed) { if (prev[name] === "To pole jest wymagane.") delete next[name]; return next; }
-      if (name === "email") {
-        if (isValidEmail(trimmed)) delete next["email"];
-        else next["email"] = trimmed.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
-        return next;
-      }
-      if (name === "phone") {
-        if (/^\d{9,15}$/.test(trimmed)) delete next["phone"];
-        else next["phone"] = "Numer telefonu może zawierać tylko cyfry (9–15).";
-        return next;
-      }
+      if (name === "email" && trimmed && !isValidEmail(trimmed)) return next;
       delete next[name];
+      return next;
+    });
+  };
+  const validateEmailOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const trimmed = event.target.value.trim();
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (!trimmed || isValidEmail(trimmed)) delete next["email"];
+      else next["email"] = trimmed.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
       return next;
     });
   };
@@ -108,8 +107,6 @@ function OrderPage() {
     required.forEach((name) => { if (!String(form.get(name) ?? "").trim()) nextErrors[name] = "To pole jest wymagane."; });
     const email = String(form.get("email") ?? "").trim();
     if (email && !isValidEmail(email)) nextErrors["email"] = email.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
-    const phone = String(form.get("phone") ?? "").trim();
-    if (phone && !/^\d{9,15}$/.test(phone)) nextErrors["phone"] = "Numer telefonu może zawierać tylko cyfry (9–15).";
     if (delivery === "parcel" && !parcelPoint) nextErrors["parcelPoint"] = "Wybierz paczkomat.";
     if (!accepted) nextErrors["accepted"] = "Zaznacz wymaganą zgodę.";
     setErrors(nextErrors);
@@ -124,8 +121,8 @@ function OrderPage() {
         <section className="order-panel"><SectionTitle number={1} icon={UserRound} title="Dane kontaktowe" subtitle="Podaj swoje dane, abyśmy mogli skontaktować się z Tobą w sprawie zamówienia." />
           <div className="order-contact-grid">
             <Field label="Imię i nazwisko" required error={errors["fullName"]}><span className="order-input-wrap"><UserRound aria-hidden="true" /><Input name="fullName" autoComplete="name" maxLength={100} placeholder="Jan Kowalski" aria-invalid={!!errors["fullName"]} onChange={trackContact("fullName")} /></span></Field>
-            <Field label="E-mail" required error={errors["email"]}><span className="order-input-wrap"><Mail aria-hidden="true" /><Input name="email" type="email" autoComplete="email" maxLength={255} placeholder="jan.kowalski@example.com" aria-invalid={!!errors["email"]} onChange={trackContact("email")} /></span></Field>
-            <Field label="Telefon" required error={errors["phone"]}><span className="order-input-wrap"><Phone aria-hidden="true" /><Input name="phone" type="tel" inputMode="numeric" pattern="[0-9]*" autoComplete="tel" maxLength={15} placeholder="123456789" aria-invalid={!!errors["phone"]} value={contact.phone} onChange={trackContact("phone")} /></span></Field>
+            <Field label="E-mail" required error={errors["email"]}><span className="order-input-wrap"><Mail aria-hidden="true" /><Input name="email" type="email" autoComplete="email" maxLength={255} placeholder="jan.kowalski@example.com" aria-invalid={!!errors["email"]} onChange={trackContact("email")} onBlur={validateEmailOnBlur} /></span></Field>
+            <Field label="Telefon" required error={errors["phone"]}><span className="order-input-wrap"><Phone aria-hidden="true" /><Input name="phone" type="tel" inputMode="numeric" pattern="[0-9]*" autoComplete="tel" maxLength={20} placeholder="123456789" aria-invalid={!!errors["phone"]} value={contact.phone} onChange={trackContact("phone")} /></span></Field>
             <label className="order-account"><Checkbox disabled /><span><strong>Utwórz konto</strong> (opcjonalnie)<small>Ta możliwość będzie dostępna wkrótce.</small></span></label>
           </div>
         </section>
