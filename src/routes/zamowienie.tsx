@@ -71,7 +71,9 @@ function OrderPage() {
   const colorLabel = config.color === "white" ? "biały" : config.color === "beige" ? "beżowy" : config.colorText;
   const finishLabel = config.finish === "single" ? `${finish?.label} (${colorLabel})` : finish?.label;
   const money = (amount: number) => `${amount.toFixed(2).replace(".", ",")} zł`;
-  const contactComplete = Boolean(contact.fullName.trim() && contact.email.trim() && contact.phone.trim());
+  const isTwoPartName = (value: string) => value.trim().split(/\s+/).filter(Boolean).length >= 2;
+  const nameError = "Wpisz imię i nazwisko (co najmniej dwa słowa).";
+  const contactComplete = isTwoPartName(contact.fullName) && Boolean(contact.email.trim() && contact.phone.trim());
   const clearError = (name: string, value: string) => {
     if (!value.trim() || !errors[name]) return;
     setErrors((prev) => { const next = { ...prev }; delete next[name]; return next; });
@@ -85,6 +87,7 @@ function OrderPage() {
       const next = { ...prev };
       const trimmed = value.trim();
       if (name === "email" && trimmed && !isValidEmail(trimmed)) return next;
+      if (name === "fullName" && trimmed && !isTwoPartName(trimmed)) return next;
       delete next[name];
       return next;
     });
@@ -98,6 +101,15 @@ function OrderPage() {
       return next;
     });
   };
+  const validateNameOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const trimmed = event.target.value.trim();
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (!trimmed || isTwoPartName(trimmed)) delete next["fullName"];
+      else next["fullName"] = nameError;
+      return next;
+    });
+  };
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -105,6 +117,8 @@ function OrderPage() {
     const required = delivery === "courier" ? ["fullName", "email", "phone", "street", "postalCode", "city"] : ["fullName", "email", "phone"];
     const nextErrors: Record<string, string> = {};
     required.forEach((name) => { if (!String(form.get(name) ?? "").trim()) nextErrors[name] = "To pole jest wymagane."; });
+    const fullName = String(form.get("fullName") ?? "").trim();
+    if (fullName && !isTwoPartName(fullName)) nextErrors["fullName"] = nameError;
     const email = String(form.get("email") ?? "").trim();
     if (email && !isValidEmail(email)) nextErrors["email"] = email.includes("@") ? "Błędny adres e-mail." : "Błędny adres e-mail — brakuje znaku @.";
     if (delivery === "parcel" && !parcelPoint) nextErrors["parcelPoint"] = "Wybierz paczkomat.";
