@@ -243,7 +243,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
     <button
       type="button"
       onClick={(event) => { event.stopPropagation(); textInput.onEdit(); }}
-      className="mt-3 flex h-7 w-[153px] items-center justify-between gap-1.5 rounded border border-primary/40 bg-primary/5 px-2 text-[11px] font-semibold text-foreground transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="mt-3 flex h-7 w-[179px] items-center justify-between gap-1.5 rounded border border-primary/40 bg-primary/5 px-2 text-[11px] font-semibold text-foreground transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <span className="truncate text-left">{textInput.value}</span>
       <Check className="size-3.5 shrink-0 text-primary" />
