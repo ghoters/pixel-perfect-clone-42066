@@ -65,8 +65,8 @@ function OrderPage() {
     return () => { mounted = false; };
   }, []);
 
-  if (!configReady) return <><SiteHeader active="offer" /><main className="order-page" /><SiteFooter /></>;
-  if (!config) return <><SiteHeader active="offer" /><main className="order-page"><div className="order-empty"><h1>Najpierw skonfiguruj figurkę</h1><p>Wybierz wszystkie opcje i dodaj zdjęcia, aby przejść do zamówienia.</p><Button asChild><Link to="/oferta">Przejdź do konfiguratora <ArrowRight /></Link></Button></div></main><SiteFooter /></>;
+  if (!configReady) return <><SiteHeader variant="checkout" /><main className="order-page" /><SiteFooter /></>;
+  if (!config) return <><SiteHeader variant="checkout" /><main className="order-page"><div className="order-empty"><h1>Najpierw skonfiguruj figurkę</h1><p>Wybierz wszystkie opcje i dodaj zdjęcia, aby przejść do zamówienia.</p><Button asChild><Link to="/oferta">Przejdź do konfiguratora <ArrowRight /></Link></Button></div></main><SiteFooter /></>;
 
   const size = config.size ? sizes[config.size as keyof typeof sizes] : undefined;
   const finish = config.finish ? finishes[config.finish as keyof typeof finishes] : undefined;
@@ -146,7 +146,7 @@ function OrderPage() {
     }
   }
 
-  return <><SiteHeader active="offer" /><main className="order-page"><div className="order-layout">
+  return <><SiteHeader variant="checkout" /><main className="order-page"><div className="order-layout">
     <header className="order-intro"><p className="order-eyebrow">Dane i zamówienie</p><h1>Skończ konfigurację. Złóż zamówienie!</h1><p>Uzupełnij swoje dane, wybierz sposób dostawy i sprawdź podsumowanie zamówienia.<br className="order-desktop-break" /> Po zatwierdzeniu przejdziesz do płatności, a my zajmiemy się resztą!</p></header>
     <div className="order-progress" aria-label="Postęp zamówienia">{["Konfiguracja", "Dane i dostawa", "Płatność", "Potwierdzenie"].map((step, index) => <div key={step} className={`order-progress-step ${index === 1 ? "is-current" : ""} ${index === 0 || (index === 1 && contactComplete) ? "is-done" : ""}`}><span className="order-progress-circle">{index === 0 || (index === 1 && contactComplete) ? <Check aria-hidden="true" /> : index + 1}</span><span>{step}</span><i /></div>)}</div>
     <form className="order-grid" onSubmit={submit} noValidate>

@@ -45,13 +45,13 @@ function PaymentPage() {
     setReady(true);
   }, []);
 
-  if (!ready) return <><SiteHeader active="offer" /><main className="payment-page" /><SiteFooter /></>;
+  if (!ready) return <><SiteHeader variant="checkout" /><main className="payment-page" /><SiteFooter /></>;
 
-  if (!summary) return <><SiteHeader active="offer" /><main className="payment-page"><div className="payment-empty"><h1>Brak zamówienia do opłacenia</h1><p>Najpierw uzupełnij dane zamówienia, aby zobaczyć poprawną kwotę.</p><Button asChild><Link to="/oferta">Przejdź do konfiguratora <ArrowRight /></Link></Button></div></main><SiteFooter /></>;
+  if (!summary) return <><SiteHeader variant="checkout" /><main className="payment-page"><div className="payment-empty"><h1>Brak zamówienia do opłacenia</h1><p>Najpierw uzupełnij dane zamówienia, aby zobaczyć poprawną kwotę.</p><Button asChild><Link to="/oferta">Przejdź do konfiguratora <ArrowRight /></Link></Button></div></main><SiteFooter /></>;
 
   const total = summary.figurinePrice + summary.deliveryPrice;
 
-  return <><SiteHeader active="offer" /><main className="payment-page"><div className="payment-layout">
+  return <><SiteHeader variant="checkout" /><main className="payment-page"><div className="payment-layout">
     <header className="payment-intro"><h1>Płatność</h1><p>Wybierz dogodną metodę płatności i sfinalizuj zamówienie.</p></header>
     <div className="order-progress" aria-label="Postęp zamówienia">{["Konfiguracja", "Dane i dostawa", "Płatność", "Potwierdzenie"].map((step, index) => <div key={step} className={`order-progress-step ${index === 2 ? "is-current" : ""} ${index < 2 ? "is-done" : ""}`}><span className="order-progress-circle">{index < 2 ? <Check aria-hidden="true" /> : index + 1}</span><span>{step}</span><i /></div>)}</div>
     <div className="payment-grid">
