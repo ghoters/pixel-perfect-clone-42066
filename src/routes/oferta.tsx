@@ -468,6 +468,7 @@ function OfferPage() {
   const [customText, setCustomText] = useState("");
   const [customCommitted, setCustomCommitted] = useState(false);
   const [graverText, setGraverText] = useState("");
+  const graverInputRef = useRef<HTMLInputElement>(null);
   const [graverCommitted, setGraverCommitted] = useState(false);
   const [size, setSize] = useState<string | null>(null);
   const [finish, setFinish] = useState<string | null>(null);
