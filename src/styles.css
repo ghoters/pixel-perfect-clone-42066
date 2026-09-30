@@ -376,7 +376,10 @@
   min-height: calc(100vh - 68px);
   background: var(--background);
   color: var(--payment-ink);
+  --order-blue: oklch(0.57 0.23 268);
+  --order-outline: oklch(0.88 0.055 267);
 }
+.payment-page .order-progress { margin: 22px auto 0; }
 .payment-layout { width: min(calc(100% - 2rem), 1160px); margin: 0 auto; padding: 44px 0 70px; }
 .payment-intro h1 { font-size: 34px; line-height: 1.2; font-weight: 800; }
 .payment-intro p { margin-top: 10px; color: var(--muted-foreground); font-size: 14px; }
