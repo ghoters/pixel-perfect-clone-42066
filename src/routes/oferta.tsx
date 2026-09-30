@@ -153,7 +153,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
   imageContain?: boolean | undefined;
   recommended?: boolean;
   recommendedTone?: "light-gray" | "dark-gray" | "purple" | undefined;
-  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; committed: boolean; buttonLabel: string } | undefined;
+  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; onClear: () => void; committed: boolean; buttonLabel: string } | undefined;
   titleNowrap?: boolean | undefined;
   matchBadgePadding?: boolean | undefined;
   tightGap?: boolean | undefined;
