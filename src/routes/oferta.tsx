@@ -242,6 +242,17 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
                   }}
                   className="h-7 min-w-0 flex-1 rounded border border-border bg-card px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
+                {textInput.value.length > 0 && (
+                  <button
+                    type="button"
+                    aria-label="Wyczyść element"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={(event) => { event.stopPropagation(); textInput.onClear(); inputRef.current?.focus(); }}
+                    className="grid h-7 w-7 shrink-0 place-items-center rounded border border-border bg-muted/60 text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
                 <button
                   type="button"
                   aria-label="Zatwierdź element"
