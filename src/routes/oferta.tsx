@@ -880,8 +880,9 @@ function OfferPage() {
                         if (base !== item.id) { cancelGraverReset(); setBase(item.id); return; }
                         if (lastFilledStep !== 3) return;
                         clearBase();
-                        // Re-clicking Personalizowana removes its selection and falls back to Standardowa.
-                        if (item.id === "personalized") setBase("standard");
+                        // Deselecting Personalizowana removes the engraving text instead of
+                        // silently falling back to Standardowa.
+                        if (item.id === "personalized") { setGraverText(""); setGraverCommitted(false); }
                       }}
                     />
                   );
