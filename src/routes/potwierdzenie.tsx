@@ -53,15 +53,6 @@ function ConfirmationPage() {
       <SiteHeader active="offer" />
       <main className="payment-page">
         <div className="payment-layout">
-          <div className="order-progress" aria-label="Postęp zamówienia">
-            {["Konfiguracja", "Dane i dostawa", "Płatność", "Potwierdzenie"].map((step, index) => (
-              <div key={step} className={`order-progress-step ${index === 3 ? "is-current" : ""} ${index < 3 ? "is-done" : ""}`}>
-                <span className="order-progress-circle">{index < 3 ? <Check aria-hidden="true" /> : index + 1}</span>
-                <span>{step}</span>
-                <i />
-              </div>
-            ))}
-          </div>
           <div className="confirm-shell">
             <span className="confirm-badge"><Check aria-hidden="true" /></span>
             <h1>Zamówienie zostało złożone!</h1>
