@@ -531,7 +531,7 @@ function OfferPage() {
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
   // Removing the base choice leaves the step empty (no fallback to Standardowa) and
   // deletes the engraving text, so re-selecting Personalizowana starts from a clean field.
-  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
+  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
