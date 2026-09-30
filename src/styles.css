@@ -274,7 +274,7 @@
 .order-page input:not([type='checkbox']):not([type='radio']), .order-page textarea, .order-page select { border: 1px solid var(--order-outline); border-radius: 6px; background: var(--card); color: var(--order-ink); box-shadow: none; font-family: inherit; }
 .order-page input:not([type='checkbox']):not([type='radio']) { height: 40px; width: 100%; font-size: 13px; }
 .order-page input:focus-visible, .order-page textarea:focus-visible, .order-page select:focus-visible { outline: 2px solid var(--order-blue); outline-offset: 1px; }
-.order-page input::placeholder, .order-page textarea::placeholder { color: oklch(0.74 0.015 267); opacity: 1; }
+.order-page input::placeholder, .order-page textarea::placeholder { color: oklch(0.86 0.01 267); opacity: 1; }
 .order-page input:not([type='checkbox']):not([type='radio']):not(:placeholder-shown), .order-page textarea:not(:placeholder-shown) { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background: color-mix(in oklab, var(--primary) 5%, var(--card)); }
 .order-page input[aria-invalid='true'] { border-color: var(--destructive); }
 .order-input-wrap { position: relative; display: block; }
