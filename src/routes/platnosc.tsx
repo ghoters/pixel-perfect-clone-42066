@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { readPaymentSummary, type PaymentSummary } from "@/lib/payment-summary";
+import { useNavigate } from "@tanstack/react-router";
+import { ORDER_NUMBER_KEY, ORDER_PLACED_KEY } from "@/routes/potwierdzenie";
 
 export const Route = createFileRoute("/platnosc")({
   head: () => ({
@@ -36,7 +38,7 @@ function PaymentPage() {
   const [summary, setSummary] = useState<PaymentSummary | null>(null);
   const [ready, setReady] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("blik");
-  const [notice, setNotice] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSummary(readPaymentSummary());
@@ -62,7 +64,11 @@ function PaymentPage() {
             <span>{label}</span><ChevronRight aria-hidden="true" />
           </label>)}
         </div>
-          {notice ? <p role="status" className="payment-notice">To jest podgląd płatności. Pobieranie pieniędzy nie jest jeszcze aktywne.</p> : <Button type="button" className="payment-submit" onClick={() => setNotice(true)}>Zapłać i złóż zamówienie <ArrowRight aria-hidden="true" /></Button>}
+          <Button type="button" className="payment-submit" onClick={() => {
+            window.sessionStorage.setItem(ORDER_PLACED_KEY, "1");
+            window.sessionStorage.setItem(ORDER_NUMBER_KEY, `#${Math.floor(1000 + Math.random() * 9000)}`);
+            navigate({ to: "/potwierdzenie" });
+          }}>Zapłać i złóż zamówienie <ArrowRight aria-hidden="true" /></Button>
         </section>
       </div>
       <aside className="payment-right">
