@@ -172,6 +172,85 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
     }
   };
   const fullBackground = imageFull && image;
+  // Cards whose photo is a full-bleed background squeeze the text column, so the
+  // description input would shrink to a few characters. Those cards pin the input
+  // row to the bottom edge of the card (full inner width) and reserve the space
+  // for it in the column padding.
+  const absStrip = Boolean(textInput && fullBackground);
+  const priceLines = (priceLabel ?? (price ? `+ ${price} zł` : "Cena podstawowa")).split("\n");
+  const textInputPrice = textInput ? (
+    <span className={`pt-3 text-xs font-bold ${priceViolet ? "text-primary" : ""} ${fullBackground ? "[&>span]:whitespace-normal" : ""}`}>
+      {priceLines.map((line, index) => (
+        <span key={index} className="block whitespace-nowrap">{line}</span>
+      ))}
+    </span>
+  ) : null;
+  const textInputTrigger = textInput && !textInput.committed && !selected ? (
+    <button
+      type="button"
+      onClick={(event) => { event.stopPropagation(); onClick(); }}
+      className="mt-3 inline-flex h-7 w-fit items-center justify-center gap-1.5 self-start rounded-full border border-primary/30 bg-primary/10 px-[6px] text-[11px] font-semibold text-primary transition-colors hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      <Plus className="size-3.5 shrink-0" />
+      <span className="whitespace-nowrap text-center leading-none">{textInput.buttonLabel}</span>
+    </button>
+  ) : null;
+  const textInputEditor = textInput && !textInput.committed && selected ? (
+    <div className="mt-3 flex h-7 w-full gap-1">
+      <input
+        ref={inputRef}
+        type="text"
+        maxLength={40}
+        autoFocus
+        value={textInput.value}
+        placeholder={textInput.placeholder}
+        onChange={(event) => textInput.onChange(event.currentTarget.value)}
+        onClick={(event) => event.stopPropagation()}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") { event.preventDefault(); event.stopPropagation(); handleCommit(); }
+          else if (event.key === " ") { event.stopPropagation(); }
+          else if (event.key === "Escape") { event.stopPropagation(); inputRef.current?.blur(); }
+        }}
+        onBlur={(event) => {
+          if (textInput.committed) return;
+          if (event.relatedTarget && containerRef.current?.contains(event.relatedTarget as Node)) return;
+          if (textInput.value.trim()) textInput.onCommit();
+          else textInput.onCancel();
+        }}
+        className="h-7 min-w-0 flex-1 rounded border border-border bg-card px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+      <button
+        type="button"
+        aria-label="Zatwierdź element"
+        onMouseDown={(event) => event.preventDefault()}
+        onClick={(event) => { event.stopPropagation(); handleCommit(); }}
+        className="grid h-7 w-7 shrink-0 place-items-center rounded border border-primary/30 bg-primary/10 text-primary transition-colors hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <ArrowRight className="size-3.5" />
+      </button>
+      {textInput.value.length > 0 && (
+        <button
+          type="button"
+          aria-label="Wyczyść element"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={(event) => { event.stopPropagation(); textInput.onClear(); inputRef.current?.focus(); }}
+          className="grid h-7 w-7 shrink-0 place-items-center rounded border border-border bg-muted/60 text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <X className="size-3.5" />
+        </button>
+      )}
+    </div>
+  ) : null;
+  const textInputChip = textInput?.committed ? (
+    <button
+      type="button"
+      onClick={(event) => { event.stopPropagation(); textInput.onEdit(); }}
+      className="mt-3 flex h-7 w-full items-center justify-between gap-1.5 rounded border border-primary/40 bg-primary/5 px-2 text-[11px] font-semibold text-foreground transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      <span className="truncate text-left">{textInput.value}</span>
+      <Check className="size-3.5 shrink-0 text-primary" />
+    </button>
+  ) : null;
   const slot = fullBackground ? <span aria-hidden="true" className={`block shrink-0 ${imageClassName ?? "w-[38%]"}`} /> : <ImageSlot image={image} side={imageSide} contain={Boolean(imageContain)} className={`h-full min-h-[108px] ${imageClassName ?? "w-[38%]"}`} />;
   return (
     <div
