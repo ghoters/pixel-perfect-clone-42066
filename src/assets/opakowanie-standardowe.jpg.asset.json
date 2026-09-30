@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "ef08a6ae-2639-4385-884a-2b557477f619",
-  "project_id": "24912a2c-9d00-4cce-88dd-8f785c36fc43",
-  "url": "/__l5e/assets-v1/ef08a6ae-2639-4385-884a-2b557477f619/opakowanie-standardowe.jpg",
-  "r2_key": "a/v1/24912a2c-9d00-4cce-88dd-8f785c36fc43/ef08a6ae-2639-4385-884a-2b557477f619/opakowanie-standardowe.jpg",
-  "original_filename": "opakowanie-standardowe.jpg",
-  "size": 62645,
   "content_type": "image/jpeg",
-  "created_at": "2026-09-29T23:41:01Z"
+  "created_at": "2026-09-29T23:41:01Z",
+  "original_filename": "opakowanie-standardowe.jpg",
+  "project_id": "14e6861d-b3d7-4dec-ae98-f4ae0bfa8269",
+  "r2_key": "a/v1/14e6861d-b3d7-4dec-ae98-f4ae0bfa8269/ef08a6ae-2639-4385-884a-2b557477f619/opakowanie-standardowe.jpg",
+  "size": 62645,
+  "url": "/__l5e/assets-v1/ef08a6ae-2639-4385-884a-2b557477f619/opakowanie-standardowe.jpg",
+  "version": 1
 }
