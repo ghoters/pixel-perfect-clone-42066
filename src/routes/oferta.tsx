@@ -198,83 +198,25 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       )}
       {recommended && <RecommendedBadge className={recommendedClasses} />}
       {imageSide === "left" && slot}
-      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
+      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absStrip ? (recommended && imageSide === "right" ? "pt-[10px] pb-[38px]" : "pt-1 pb-[38px]") : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
         <div className="flex items-start gap-2 text-sm font-extrabold leading-tight">{Icon && <Icon className="size-4 shrink-0 text-primary" />}<span className={titleNowrap ? "whitespace-nowrap" : "whitespace-pre-line"}>{title}</span></div>
         <p className={`${matchBadgePadding ? "mt-[14px]" : "mt-2"} text-xs font-normal leading-5 text-muted-foreground`}>{text}</p>
         {textInput ? (
-          <div className="mt-auto flex w-full flex-col">
-            <div className="flex w-[153px] flex-col items-start">
-              <span className={`pt-3 text-xs font-bold ${priceViolet ? "text-primary" : ""} ${fullBackground ? "[&>span]:whitespace-normal" : ""}`}>{(priceLabel ?? (price ? `+ ${price} zł` : "Cena podstawowa")).split("\n").map((line, index) => (
-                <span key={index} className="block whitespace-nowrap">{line}</span>
-              ))}</span>
-              {!textInput.committed && !selected && (
-                <button
-                  type="button"
-                  onClick={(event) => { event.stopPropagation(); onClick(); }}
-                  className="mt-3 inline-flex h-7 items-center justify-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-[6px] text-[11px] font-semibold text-primary transition-colors hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Plus className="size-3.5 shrink-0" />
-                  <span className="whitespace-nowrap text-center leading-none">{textInput.buttonLabel}</span>
-                </button>
-              )}
-            </div>
-            {!textInput.committed && selected && (
-              <div className="mt-3 flex h-7 w-full gap-1">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  maxLength={40}
-                  autoFocus
-                  value={textInput.value}
-                  placeholder={textInput.placeholder}
-                  onChange={(event) => textInput.onChange(event.currentTarget.value)}
-                  onClick={(event) => event.stopPropagation()}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") { event.preventDefault(); event.stopPropagation(); handleCommit(); }
-                    else if (event.key === " ") { event.stopPropagation(); }
-                    else if (event.key === "Escape") { event.stopPropagation(); inputRef.current?.blur(); }
-                  }}
-                  onBlur={(event) => {
-                    if (textInput.committed) return;
-                    if (event.relatedTarget && containerRef.current?.contains(event.relatedTarget as Node)) return;
-                    if (textInput.value.trim()) textInput.onCommit();
-                    else textInput.onCancel();
-                  }}
-                  className="h-7 min-w-0 flex-1 rounded border border-border bg-card px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                />
-                {textInput.value.length > 0 && (
-                  <button
-                    type="button"
-                    aria-label="Wyczyść element"
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={(event) => { event.stopPropagation(); textInput.onClear(); inputRef.current?.focus(); }}
-                    className="grid h-7 w-7 shrink-0 place-items-center rounded border border-border bg-muted/60 text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <X className="size-3.5" />
-                  </button>
-                )}
-                <button
-                  type="button"
-                  aria-label="Zatwierdź element"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={(event) => { event.stopPropagation(); handleCommit(); }}
-                  className="grid h-7 w-7 shrink-0 place-items-center rounded border border-primary/30 bg-primary/10 text-primary transition-colors hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <ArrowRight className="size-3.5" />
-                </button>
+          absStrip ? (
+            <>
+              <div className="mt-auto w-full">{textInputPrice}</div>
+              <div className="absolute inset-x-3.5 bottom-3.5 z-10 flex flex-col">{textInputTrigger}{textInputEditor}{textInputChip}</div>
+            </>
+          ) : (
+            <div className="mt-auto flex w-full flex-col">
+              <div className="flex w-[153px] flex-col items-start">
+                {textInputPrice}
+                {textInputTrigger}
               </div>
-            )}
-            {textInput.committed && (
-              <button
-                type="button"
-                onClick={(event) => { event.stopPropagation(); textInput.onEdit(); }}
-                className="mt-3 flex h-7 w-full items-center justify-between gap-1.5 rounded border border-primary/40 bg-primary/5 px-2 text-[11px] font-semibold text-foreground transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <span className="truncate text-left">{textInput.value}</span>
-                <Check className="size-3.5 shrink-0 text-primary" />
-              </button>
-            )}
-          </div>
+              {textInputEditor}
+              {textInputChip}
+            </div>
+          )
         ) : (
           <span className={`mt-auto pt-3 text-xs font-bold ${priceViolet ? "text-primary" : ""} ${priceCentered ? "w-full text-left" : ""}`}>{(priceLabel ?? (price ? `+ ${price} zł` : "Cena podstawowa")).split("\n").map((line, index) => (
             <span key={index} className={`block whitespace-nowrap ${line.startsWith("(") ? "tracking-[-0.04em]" : line.length > 18 ? "tracking-[-0.022em]" : ""}`}>{line}</span>
