@@ -691,6 +691,7 @@ function OfferPage() {
                       onCommit: () => { if (customText.trim()) { setCustomCommitted(true); setSubjects((current) => current.includes("custom") ? current : [...current, "custom"]); } },
                       onEdit: () => setCustomCommitted(false),
                       onCancel: () => { setCustomText(""); setCustomCommitted(false); setSubjects((current) => current.filter((id) => id !== "custom")); },
+                      onClear: () => { setCustomText(""); setCustomCommitted(false); },
                       buttonLabel: "Dodaj własny element",
                     } : undefined}
                     minCount={item.id === "animal" ? 0 : undefined}
