@@ -172,11 +172,9 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
     }
   };
   const fullBackground = imageFull && image;
-  // Cards whose photo is a full-bleed background squeeze the text column, so the
-  // description input would shrink to a few characters. Those cards pin the input
-  // row to the bottom edge of the card (full inner width) and reserve the space
-  // for it in the column padding.
-  const absStrip = Boolean(textInput && fullBackground);
+  // Full-background cards only need the wide bottom row while the user is editing.
+  // The idle trigger and committed value stay aligned with the text column.
+  const absEditor = Boolean(textInput && fullBackground && selected && !textInput.committed);
   const priceLines = (priceLabel ?? (price ? `+ ${price} zł` : "Cena podstawowa")).split("\n");
   const textInputPrice = textInput ? (
     <span className={`pt-3 text-xs font-bold ${priceViolet ? "text-primary" : ""} ${fullBackground ? "[&>span]:whitespace-normal" : ""}`}>
@@ -185,7 +183,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       ))}
     </span>
   ) : null;
-  const textInputTrigger = textInput && !textInput.committed && !selected ? (
+  const textInputTrigger = textInput && !selected ? (
     <button
       type="button"
       onClick={(event) => { event.stopPropagation(); onClick(); }}
@@ -241,11 +239,11 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       )}
     </div>
   ) : null;
-  const textInputChip = textInput?.committed ? (
+  const textInputChip = textInput?.committed && selected ? (
     <button
       type="button"
       onClick={(event) => { event.stopPropagation(); textInput.onEdit(); }}
-      className="mt-3 flex h-7 w-full items-center justify-between gap-1.5 rounded border border-primary/40 bg-primary/5 px-2 text-[11px] font-semibold text-foreground transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="mt-3 flex h-7 w-[179px] items-center justify-between gap-1.5 rounded border border-primary/40 bg-primary/5 px-2 text-[11px] font-semibold text-foreground transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <span className="truncate text-left">{textInput.value}</span>
       <Check className="size-3.5 shrink-0 text-primary" />
@@ -277,12 +275,16 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       )}
       {recommended && <RecommendedBadge className={recommendedClasses} />}
       {imageSide === "left" && slot}
-      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absStrip ? (recommended && imageSide === "right" ? "pt-[10px] pb-[38px]" : "pt-1 pb-[38px]") : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
+      <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absEditor ? (recommended && imageSide === "right" ? "pt-[10px] pb-[38px]" : "pt-1 pb-[38px]") : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
         <div className="flex items-start gap-2 text-sm font-extrabold leading-tight">{Icon && <Icon className="size-4 shrink-0 text-primary" />}<span className={titleNowrap ? "whitespace-nowrap" : "whitespace-pre-line"}>{title}</span></div>
         <p className={`${matchBadgePadding ? "mt-[14px]" : "mt-2"} text-xs font-normal leading-5 text-muted-foreground`}>{text}</p>
         {textInput ? (
-          absStrip ? (
-            <div className="mt-auto w-full">{textInputPrice}</div>
+          fullBackground ? (
+            <div className="mt-auto flex w-full flex-col items-start">
+              {textInputPrice}
+              {!absEditor && textInputTrigger}
+              {!absEditor && textInputChip}
+            </div>
           ) : (
             <div className="mt-auto flex w-full flex-col">
               <div className="flex w-[153px] flex-col items-start">
@@ -322,8 +324,8 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
         )}
       </div>
       {imageSide === "right" && slot}
-      {absStrip && (
-        <div className="absolute inset-x-3.5 bottom-3.5 z-10 flex flex-col">{textInputTrigger}{textInputEditor}{textInputChip}</div>
+      {absEditor && (
+        <div className="absolute inset-x-3.5 bottom-3.5 z-10 flex flex-col">{textInputEditor}</div>
       )}
       <span className={`absolute right-3 top-3 size-4 rounded-full border ${selected ? "border-primary bg-primary ring-2 ring-card" : "border-border bg-card"}`} />
     </div>
