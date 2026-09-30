@@ -529,7 +529,7 @@ function OfferPage() {
   // Clearing a step also resets all later choices so the configuration stays consistent.
   const clearSize = () => { setSize(null); setFinish(null); setBase(null); setPack(null); };
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
-  // Keep the committed engraving text so re-selecting Personalizowana restores it.
+  // Removing the base choice leaves the step empty (no fallback to Standardowa).
   const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); };
   const clearPack = () => { setPack(null); };
 
