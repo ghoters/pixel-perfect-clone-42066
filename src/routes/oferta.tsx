@@ -282,10 +282,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
         <p className={`${matchBadgePadding ? "mt-[14px]" : "mt-2"} text-xs font-normal leading-5 text-muted-foreground`}>{text}</p>
         {textInput ? (
           absStrip ? (
-            <>
-              <div className="mt-auto w-full">{textInputPrice}</div>
-              <div className="absolute inset-x-3.5 bottom-3.5 z-10 flex flex-col">{textInputTrigger}{textInputEditor}{textInputChip}</div>
-            </>
+            <div className="mt-auto w-full">{textInputPrice}</div>
           ) : (
             <div className="mt-auto flex w-full flex-col">
               <div className="flex w-[153px] flex-col items-start">
@@ -325,6 +322,9 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
         )}
       </div>
       {imageSide === "right" && slot}
+      {absStrip && (
+        <div className="absolute inset-x-3.5 bottom-3.5 z-10 flex flex-col">{textInputTrigger}{textInputEditor}{textInputChip}</div>
+      )}
       <span className={`absolute right-3 top-3 size-4 rounded-full border ${selected ? "border-primary bg-primary ring-2 ring-card" : "border-border bg-card"}`} />
     </div>
   );
