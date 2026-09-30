@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowRight, Check, CircleCheck, Clock3, Gift, Images, Mail, MessageSquareText, PackageCheck, Paintbrush, Phone, ShieldCheck, Truck, UserRound, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { readFigurineConfig, type FigurineConfig } from "@/lib/figurine-config";
 import { readOrderPhotos } from "@/lib/order-photos";
 import { OrderPhotoGallery } from "@/components/OrderPhotoGallery";
+import { savePaymentSummary } from "@/lib/payment-summary";
 import previewImage from "@/assets/podglad-figurki-para-pies.jpg.asset.json";
 import orderPreview from "@/assets/zamowienie-podglad.png.asset.json";
 import singlePreview from "@/assets/podglad-figurki.jpg.asset.json";
@@ -43,6 +44,7 @@ function SectionTitle({ number, icon: Icon, title, subtitle }: { number: number;
 }
 
 function OrderPage() {
+  const navigate = useNavigate({ from: "/zamowienie" });
   const [config, setConfig] = useState<FigurineConfig | null>(null);
   const [configReady, setConfigReady] = useState(false);
   const [orderPhotos, setOrderPhotos] = useState<File[]>([]);
@@ -51,7 +53,6 @@ function OrderPage() {
   const [carrier, setCarrier] = useState("InPost");
   const [accepted, setAccepted] = useState(true);
   const [portfolio, setPortfolio] = useState(true);
-  const [submitted, setSubmitted] = useState(false);
   const [notes, setNotes] = useState("");
   const [preview, setPreview] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -139,7 +140,10 @@ function OrderPage() {
     if (delivery === "parcel" && !parcelPoint) nextErrors["parcelPoint"] = "Wybierz paczkomat.";
     if (!accepted) nextErrors["accepted"] = "Zaznacz wymaganą zgodę.";
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) setSubmitted(true);
+    if (Object.keys(nextErrors).length === 0) {
+      savePaymentSummary({ figurinePrice, deliveryPrice, deliveryLabel: delivery === "parcel" ? "Paczkomat" : "Kurier" });
+      void navigate({ to: "/platnosc" });
+    }
   }
 
   return <><SiteHeader active="offer" /><main className="order-page"><div className="order-layout">
@@ -174,7 +178,7 @@ function OrderPage() {
         <div className="order-summary-block"><h3><PackageCheck aria-hidden="true" /> Podsumowanie konfiguracji</h3><OrderRow icon={UsersRound} label="Liczba osób / zwierząt" value={subjectLabel} /><OrderRow icon={UsersRound} label="Rozmiar figurki" value={size?.label ?? "—"} /><OrderRow icon={Paintbrush} label="Wykończenie" value={finishLabel ?? "—"} /><OrderRow icon={CircleCheck} label="Podstawka" value={config.base === "personalized" && config.graverText ? `${base?.label} — ${config.graverText}` : base?.label ?? "—"} /><OrderRow icon={Gift} label="Opakowanie" value={pack?.label ?? "—"} /><div className="order-row"><Images aria-hidden="true" /><span>Zdjęcia</span>{orderPhotos.length ? <OrderPhotoGallery files={orderPhotos} compact /> : <strong>Brak zdjęć — dodaj w Ofercie</strong>}</div><Button variant="outline" size="sm" asChild className="order-edit-summary"><Link to="/oferta">Edytuj konfigurację <ArrowRight aria-hidden="true" /></Link></Button></div>
         <div className="order-summary-block order-totals"><h3><ShieldCheck aria-hidden="true" /> Szczegóły zamówienia</h3><div><span>Figurka</span><strong>{money(figurinePrice)}</strong></div><div><span>Dostawa ({delivery === "parcel" ? "Paczkomat" : "Kurier"})</span><strong>{deliveryPrice === 0 ? "Darmowa" : money(deliveryPrice)}</strong></div><div className="order-total"><strong>Razem</strong><strong>{money(figurinePrice + deliveryPrice)}</strong></div></div>
         <p className="order-estimate"><Clock3 aria-hidden="true" /> Przewidywany czas realizacji: do 14 dni roboczych</p>
-        {submitted ? <p role="status" className="order-submitted">Dane są kompletne. Płatność zostanie dodana w kolejnym etapie.</p> : <Button type="submit" className="order-submit">Przejdź do płatności <ArrowRight aria-hidden="true" /></Button>}
+        <Button type="submit" className="order-submit">Przejdź do płatności <ArrowRight aria-hidden="true" /></Button>
       </aside>
     </form>
   </div></main><SiteFooter /></>;

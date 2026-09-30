@@ -13,3 +13,4 @@
 - Keep downloaded source-project media as newly uploaded local project asset pointers; source-project pointers are scoped to their original project.
 - Keep the reference-image redesign scoped to the order route and its `.order-page` styles so the other two source-faithful pages stay unchanged.
 - Store selected order photos in browser IndexedDB and keep only their count in the session configuration; image files exceed practical sessionStorage limits and must survive navigation between the two pages.
+- Pass the calculated order totals to the payment route through sessionStorage; payment remains a local preview until a real provider is explicitly enabled.
