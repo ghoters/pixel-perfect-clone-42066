@@ -712,9 +712,9 @@ function OfferPage() {
                         return [...current, "animal"];
                       }
                       if (item.id === "custom") {
-                        // Deselecting the card removes the typed description as well, so
-                        // re-adding it starts from an empty field.
-                        if (current.includes("custom")) { setCustomText(""); setCustomCommitted(false); return current.filter((id) => id !== "custom"); }
+                        // Deselecting the card keeps the typed description, so re-adding
+                        // it restores what the user already wrote; the X button clears it.
+                        if (current.includes("custom")) { return current.filter((id) => id !== "custom"); }
                         if (customText.trim()) setCustomCommitted(true);
                         return [...current, "custom"];
                       }
