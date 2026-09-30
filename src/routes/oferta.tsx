@@ -903,24 +903,38 @@ function OfferPage() {
                   <p className="mt-0.5 text-xs text-muted-foreground">Wpisz imię, datę lub napis, który umieścimy na podstawce.</p>
                   {!graverCommitted ? (
                     <div className="mt-3 flex gap-2">
-                      <input
-                        autoFocus
-                        value={graverText}
-                        onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
-                          else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
-                        }}
-                        onBlur={() => {
-                          if (graverCommitted) return;
-                          // Clicking away with a real engraving text keeps it instead of
-                          // dropping back to Standardowa; only an empty field falls back.
-                          if (graverText.trim()) { setGraverCommitted(true); return; }
-                          scheduleGraverReset();
-                        }}
-                        placeholder="Wpisz grawer, np. Na urodziny"
-                        className="h-9 min-w-0 flex-1 rounded-md border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      />
+                      <div className="relative min-w-0 flex-1">
+                        <input
+                          ref={graverInputRef}
+                          autoFocus
+                          value={graverText}
+                          onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
+                            else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
+                          }}
+                          onBlur={() => {
+                            if (graverCommitted) return;
+                            // Clicking away with a real engraving text keeps it instead of
+                            // dropping back to Standardowa; only an empty field falls back.
+                            if (graverText.trim()) { setGraverCommitted(true); return; }
+                            scheduleGraverReset();
+                          }}
+                          placeholder="Wpisz grawer, np. Na urodziny"
+                          className={`h-9 w-full rounded-md border border-input bg-card pl-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring ${graverText.length > 0 ? "pr-8" : "pr-3"}`}
+                        />
+                        {graverText.length > 0 && (
+                          <button
+                            type="button"
+                            aria-label="Wyczyść grawer"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); graverInputRef.current?.focus(); }}
+                            className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <X className="size-3.5" />
+                          </button>
+                        )}
+                      </div>
                       <Button type="button" size="sm" disabled={!graverText.trim()} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (graverText.trim()) setGraverCommitted(true); }}>
                         Zatwierdź
                       </Button>
