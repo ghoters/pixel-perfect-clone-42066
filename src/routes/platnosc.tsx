@@ -59,7 +59,7 @@ function PaymentPage() {
         <section className="payment-card payment-amount"><div><h2>Kwota do zapłaty</h2><strong>{money(total)}</strong></div><span><ShieldCheck aria-hidden="true" /> Bezpieczna płatność</span></section>
         <section className="payment-card payment-methods"><h2>Wybierz metodę płatności</h2><div className="payment-method-list">
           {paymentMethods.map(({ id, label, mark, icon: Icon }) => <label key={id} className={`payment-method ${method === id ? "is-selected" : ""}`}>
-            <input type="radio" name="payment-method" value={id} checked={method === id} onChange={() => { setMethod(id); setNotice(false); }} />
+            <input type="radio" name="payment-method" value={id} checked={method === id} onChange={() => setMethod(id)} />
             <span className="payment-method-mark">{Icon ? <Icon aria-hidden="true" /> : <b>{mark}</b>}</span>
             <span>{label}</span><ChevronRight aria-hidden="true" />
           </label>)}
