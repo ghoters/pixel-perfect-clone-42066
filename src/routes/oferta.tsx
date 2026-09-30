@@ -153,7 +153,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
   imageContain?: boolean | undefined;
   recommended?: boolean;
   recommendedTone?: "light-gray" | "dark-gray" | "purple" | undefined;
-  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; committed: boolean; buttonLabel: string } | undefined;
+  textInput?: { value: string; placeholder: string; onChange: (value: string) => void; onCommit: () => void; onEdit: () => void; onCancel: () => void; onClear: () => void; committed: boolean; buttonLabel: string } | undefined;
   titleNowrap?: boolean | undefined;
   matchBadgePadding?: boolean | undefined;
   tightGap?: boolean | undefined;
@@ -242,6 +242,17 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
                   }}
                   className="h-7 min-w-0 flex-1 rounded border border-border bg-card px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
+                {textInput.value.length > 0 && (
+                  <button
+                    type="button"
+                    aria-label="Wyczyść element"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={(event) => { event.stopPropagation(); textInput.onClear(); inputRef.current?.focus(); }}
+                    className="grid h-7 w-7 shrink-0 place-items-center rounded border border-border bg-muted/60 text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
                 <button
                   type="button"
                   aria-label="Zatwierdź element"
@@ -457,6 +468,7 @@ function OfferPage() {
   const [customText, setCustomText] = useState("");
   const [customCommitted, setCustomCommitted] = useState(false);
   const [graverText, setGraverText] = useState("");
+  const graverInputRef = useRef<HTMLInputElement>(null);
   const [graverCommitted, setGraverCommitted] = useState(false);
   const [size, setSize] = useState<string | null>(null);
   const [finish, setFinish] = useState<string | null>(null);
@@ -531,7 +543,7 @@ function OfferPage() {
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
   // Removing the base choice leaves the step empty (no fallback to Standardowa) and
   // deletes the engraving text, so re-selecting Personalizowana starts from a clean field.
-  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
+  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
@@ -680,6 +692,7 @@ function OfferPage() {
                       onCommit: () => { if (customText.trim()) { setCustomCommitted(true); setSubjects((current) => current.includes("custom") ? current : [...current, "custom"]); } },
                       onEdit: () => setCustomCommitted(false),
                       onCancel: () => { setCustomText(""); setCustomCommitted(false); setSubjects((current) => current.filter((id) => id !== "custom")); },
+                      onClear: () => { setCustomText(""); setCustomCommitted(false); },
                       buttonLabel: "Dodaj własny element",
                     } : undefined}
                     minCount={item.id === "animal" ? 0 : undefined}
@@ -712,9 +725,9 @@ function OfferPage() {
                         return [...current, "animal"];
                       }
                       if (item.id === "custom") {
-                        // Deselecting the card removes the typed description as well, so
-                        // re-adding it starts from an empty field.
-                        if (current.includes("custom")) { setCustomText(""); setCustomCommitted(false); return current.filter((id) => id !== "custom"); }
+                        // Deselecting the card keeps the typed description, so re-adding
+                        // it restores what the user already wrote; the X button clears it.
+                        if (current.includes("custom")) { return current.filter((id) => id !== "custom"); }
                         if (customText.trim()) setCustomCommitted(true);
                         return [...current, "custom"];
                       }
@@ -891,24 +904,38 @@ function OfferPage() {
                   <p className="mt-0.5 text-xs text-muted-foreground">Wpisz imię, datę lub napis, który umieścimy na podstawce.</p>
                   {!graverCommitted ? (
                     <div className="mt-3 flex gap-2">
-                      <input
-                        autoFocus
-                        value={graverText}
-                        onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
-                          else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
-                        }}
-                        onBlur={() => {
-                          if (graverCommitted) return;
-                          // Clicking away with a real engraving text keeps it instead of
-                          // dropping back to Standardowa; only an empty field falls back.
-                          if (graverText.trim()) { setGraverCommitted(true); return; }
-                          scheduleGraverReset();
-                        }}
-                        placeholder="Wpisz grawer, np. Na urodziny"
-                        className="h-9 min-w-0 flex-1 rounded-md border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      />
+                      <div className="relative min-w-0 flex-1">
+                        <input
+                          ref={graverInputRef}
+                          autoFocus
+                          value={graverText}
+                          onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
+                            else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
+                          }}
+                          onBlur={() => {
+                            if (graverCommitted) return;
+                            // Clicking away with a real engraving text keeps it instead of
+                            // dropping back to Standardowa; only an empty field falls back.
+                            if (graverText.trim()) { setGraverCommitted(true); return; }
+                            scheduleGraverReset();
+                          }}
+                          placeholder="Wpisz grawer, np. Na urodziny"
+                          className={`h-9 w-full rounded-md border border-input bg-card pl-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring ${graverText.length > 0 ? "pr-8" : "pr-3"}`}
+                        />
+                        {graverText.length > 0 && (
+                          <button
+                            type="button"
+                            aria-label="Wyczyść grawer"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); graverInputRef.current?.focus(); }}
+                            className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <X className="size-3.5" />
+                          </button>
+                        )}
+                      </div>
                       <Button type="button" size="sm" disabled={!graverText.trim()} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (graverText.trim()) setGraverCommitted(true); }}>
                         Zatwierdź
                       </Button>
