@@ -48,7 +48,51 @@ function ConfirmationPage() {
     return <><SiteHeader active="offer" /><main className="payment-page"><div className="payment-empty"><h1>Brak złożonego zamówienia</h1><p>Najpierw uzupełnij dane zamówienia i przejdź przez płatność, aby zobaczyć potwierdzenie.</p><Button asChild><Link to="/oferta">Przejdź do konfiguratora <ArrowRight /></Link></Button></div></main><SiteFooter /></>;
   }
 
-  return <><SiteHeader active="offer" /><main className="payment-page"><div className="payment-layout"><div className="payment-grid"><div className="payment-left" /><div className="payment-right" /></div></div></main><SiteFooter /></>;
+  return (
+    <>
+      <SiteHeader active="offer" />
+      <main className="payment-page">
+        <div className="payment-layout">
+          <div className="order-progress" aria-label="Postęp zamówienia">
+            {["Konfiguracja", "Dane i dostawa", "Płatność", "Potwierdzenie"].map((step, index) => (
+              <div key={step} className={`order-progress-step ${index === 3 ? "is-current" : ""} ${index < 3 ? "is-done" : ""}`}>
+                <span className="order-progress-circle">{index < 3 ? <Check aria-hidden="true" /> : index + 1}</span>
+                <span>{step}</span>
+                <i />
+              </div>
+            ))}
+          </div>
+          <div className="confirm-shell">
+            <span className="confirm-badge"><Check aria-hidden="true" /></span>
+            <h1>Zamówienie zostało złożone!</h1>
+            <p className="confirm-lead">Dziękujemy za zaufanie. Otrzymaliśmy Twoją płatność i rozpoczynamy przygotowanie Twojej figurki.</p>
+            <section className="confirm-order" aria-label="Numer zamówienia">
+              <h2>Numer zamówienia</h2>
+              <strong>{orderNumber}</strong>
+              <p>Na Twój adres e-mail wysłaliśmy potwierdzenie zamówienia.</p>
+            </section>
+            <section className="confirm-next" aria-label="Co teraz">
+              <h2>Co teraz?</h2>
+              <ol className="confirm-steps">
+                {nextSteps.map(({ icon: Icon, title, text }, index) => (
+                  <li key={title} className="confirm-step">
+                    <span className="confirm-step-icon"><Icon aria-hidden="true" /></span>
+                    <span className="confirm-step-num">{index + 1}</span>
+                    <div>
+                      <h3>{title}</h3>
+                      <p>{text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+            <Button asChild className="confirm-cta">
+              <Link to="/">Przejdź do panelu zamówienia <ArrowRight aria-hidden="true" /></Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+      <SiteFooter />
+    </>
+  );
 }
-
-export default Route;
