@@ -42,15 +42,15 @@ function ConfirmationPage() {
     setReady(true);
   }, []);
 
-  if (!ready) return <><SiteHeader active="offer" /><main className="payment-page" /><SiteFooter /></>;
+  if (!ready) return <><SiteHeader variant="checkout" /><main className="payment-page" /><SiteFooter /></>;
 
   if (!summary) {
-    return <><SiteHeader active="offer" /><main className="payment-page"><div className="payment-empty"><h1>Brak złożonego zamówienia</h1><p>Najpierw uzupełnij dane zamówienia i przejdź przez płatność, aby zobaczyć potwierdzenie.</p><Button asChild><Link to="/oferta">Przejdź do konfiguratora <ArrowRight /></Link></Button></div></main><SiteFooter /></>;
+    return <><SiteHeader variant="checkout" /><main className="payment-page"><div className="payment-empty"><h1>Brak złożonego zamówienia</h1><p>Najpierw uzupełnij dane zamówienia i przejdź przez płatność, aby zobaczyć potwierdzenie.</p><Button asChild><Link to="/oferta">Przejdź do konfiguratora <ArrowRight /></Link></Button></div></main><SiteFooter /></>;
   }
 
   return (
     <>
-      <SiteHeader active="offer" />
+      <SiteHeader variant="checkout" />
       <main className="payment-page">
         <div className="payment-layout">
           <div className="confirm-shell">
