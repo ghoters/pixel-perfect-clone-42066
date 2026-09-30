@@ -517,7 +517,7 @@ function OfferPage() {
     subjects.includes("animal") && animalCount > 0
       ? { key: "animal", label: `${animalCount} ${animalCount === 1 ? "zwierzę" : "zwierzęta"}`, onRemove: () => { setAnimalCount(0); setSubjects((current) => current.filter((id) => id !== "animal")); } }
       : null,
-    subjects.includes("custom") ? { key: "custom", label: customCommitted && customText.trim() ? customText.trim() : "Własny element", onRemove: () => { setCustomCommitted(false); setSubjects((current) => current.filter((id) => id !== "custom")); } } : null,
+    subjects.includes("custom") ? { key: "custom", label: customCommitted && customText.trim() ? customText.trim() : "Własny element", onRemove: () => { setCustomText(""); setCustomCommitted(false); setSubjects((current) => current.filter((id) => id !== "custom")); } } : null,
   ].filter(Boolean) as { key: string; label: string; onRemove?: () => void }[];
 
   // Only the deepest completed step can be cleared, so the step sequence stays intact.
@@ -529,9 +529,9 @@ function OfferPage() {
   // Clearing a step also resets all later choices so the configuration stays consistent.
   const clearSize = () => { setSize(null); setFinish(null); setBase(null); setPack(null); };
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
-  // Removing the base choice leaves the step empty (no fallback to Standardowa);
-  // the committed engraving text is kept so re-selecting Personalizowana restores it.
-  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); };
+  // Removing the base choice leaves the step empty (no fallback to Standardowa) and
+  // deletes the engraving text, so re-selecting Personalizowana starts from a clean field.
+  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
@@ -712,10 +712,9 @@ function OfferPage() {
                         return [...current, "animal"];
                       }
                       if (item.id === "custom") {
-                        // Removing the card keeps the committed text, so re-adding it restores
-                        // what was already confirmed instead of an empty field.
-                        if (customCommitted) { setCustomCommitted(false); return current.filter((id) => id !== "custom"); }
-                        if (current.includes("custom")) { setCustomText(""); return current.filter((id) => id !== "custom"); }
+                        // Deselecting the card removes the typed description as well, so
+                        // re-adding it starts from an empty field.
+                        if (current.includes("custom")) { setCustomText(""); setCustomCommitted(false); return current.filter((id) => id !== "custom"); }
                         if (customText.trim()) setCustomCommitted(true);
                         return [...current, "custom"];
                       }
