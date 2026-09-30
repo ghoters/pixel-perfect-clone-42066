@@ -901,7 +901,13 @@ function OfferPage() {
                           if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
                           else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
                         }}
-                        onBlur={() => { if (!graverCommitted) scheduleGraverReset(); }}
+                        onBlur={() => {
+                          if (graverCommitted) return;
+                          // Clicking away with a real engraving text keeps it instead of
+                          // dropping back to Standardowa; only an empty field falls back.
+                          if (graverText.trim()) { setGraverCommitted(true); return; }
+                          scheduleGraverReset();
+                        }}
                         placeholder="Wpisz grawer, np. Na urodziny"
                         className="h-9 min-w-0 flex-1 rounded-md border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
