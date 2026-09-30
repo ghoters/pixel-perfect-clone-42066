@@ -421,6 +421,34 @@
 .payment-empty { width: min(calc(100% - 2rem), 600px); margin: 0 auto; padding: 100px 0; text-align: center; }
 .payment-empty h1 { font-size: 28px; font-weight: 800; }
 .payment-empty p { margin: 12px 0 22px; color: var(--muted-foreground); }
+
+/* ===== Confirmation page ===== */
+.confirm-shell { width: min(100%, 780px); margin: 0 auto; padding: 46px 56px 44px; border: 1px solid var(--payment-outline); border-radius: 10px; background: color-mix(in srgb, var(--payment-soft) 55%, var(--card)); text-align: center; }
+.confirm-badge { width: 78px; height: 78px; display: grid; place-items: center; margin: 0 auto; border: 3px solid var(--payment-blue); border-radius: 50%; color: var(--payment-blue); }
+.confirm-badge svg { width: 34px; height: 34px; }
+.confirm-shell > h1 { margin-top: 20px; font-size: 27px; line-height: 1.2; font-weight: 800; color: var(--payment-ink); }
+.confirm-lead { max-width: 540px; margin: 12px auto 0; color: var(--muted-foreground); font-size: 14px; line-height: 1.6; }
+.confirm-order { max-width: 620px; margin: 34px auto 0; padding: 24px 26px; border: 1px solid var(--payment-outline); border-radius: 8px; background: color-mix(in srgb, var(--payment-blue) 4%, var(--card)); }
+.confirm-order h2 { font-size: 13px; font-weight: 800; color: var(--payment-ink); }
+.confirm-order strong { display: block; margin: 8px 0 10px; color: var(--payment-blue); font-size: 33px; line-height: 1.1; font-weight: 800; }
+.confirm-order p { color: var(--muted-foreground); font-size: 12px; }
+.confirm-next { margin-top: 38px; }
+.confirm-next > h2 { font-size: 17px; font-weight: 800; color: var(--payment-ink); text-align: left; }
+.confirm-steps { margin-top: 24px; padding: 0; list-style: none; display: grid; gap: 26px; text-align: left; }
+.confirm-step { display: grid; grid-template-columns: 46px 27px minmax(0, 1fr); gap: 15px; align-items: start; }
+.confirm-step-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: var(--payment-soft); color: var(--payment-blue); }
+.confirm-step-icon svg { width: 20px; height: 20px; }
+.confirm-step-num { width: 27px; height: 27px; margin-top: 9px; display: grid; place-items: center; border: 1px solid var(--payment-outline); border-radius: 50%; background: var(--card); color: var(--muted-foreground); font-size: 12px; font-weight: 700; }
+.confirm-step h3 { font-size: 14px; line-height: 1.3; font-weight: 800; color: var(--payment-ink); }
+.confirm-step p { margin-top: 4px; color: var(--muted-foreground); font-size: 12px; line-height: 1.5; }
+.confirm-cta { width: 100%; height: 54px; margin-top: 40px; background: var(--payment-blue); color: var(--primary-foreground); font-size: 14px; font-weight: 800; }
+.confirm-cta:hover { background: var(--primary-dark); }
+@media (max-width: 800px) {
+  .confirm-shell { padding: 34px 22px 32px; }
+  .confirm-shell > h1 { font-size: 23px; }
+  .confirm-step { grid-template-columns: 42px 25px minmax(0, 1fr); gap: 11px; }
+  .confirm-step-icon { width: 42px; height: 42px; }
+}
 @media (max-width: 800px) {
   .payment-layout { padding-top: 30px; }
   .payment-grid { grid-template-columns: 1fr; gap: 20px; margin-top: 24px; }

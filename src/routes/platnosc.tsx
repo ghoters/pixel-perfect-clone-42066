@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { readPaymentSummary, type PaymentSummary } from "@/lib/payment-summary";
+import { useNavigate } from "@tanstack/react-router";
+import { ORDER_NUMBER_KEY, ORDER_PLACED_KEY } from "@/routes/potwierdzenie";
 
 export const Route = createFileRoute("/platnosc")({
   head: () => ({
@@ -36,7 +38,7 @@ function PaymentPage() {
   const [summary, setSummary] = useState<PaymentSummary | null>(null);
   const [ready, setReady] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("blik");
-  const [notice, setNotice] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSummary(readPaymentSummary());
@@ -57,12 +59,16 @@ function PaymentPage() {
         <section className="payment-card payment-amount"><div><h2>Kwota do zapłaty</h2><strong>{money(total)}</strong></div><span><ShieldCheck aria-hidden="true" /> Bezpieczna płatność</span></section>
         <section className="payment-card payment-methods"><h2>Wybierz metodę płatności</h2><div className="payment-method-list">
           {paymentMethods.map(({ id, label, mark, icon: Icon }) => <label key={id} className={`payment-method ${method === id ? "is-selected" : ""}`}>
-            <input type="radio" name="payment-method" value={id} checked={method === id} onChange={() => { setMethod(id); setNotice(false); }} />
+            <input type="radio" name="payment-method" value={id} checked={method === id} onChange={() => setMethod(id)} />
             <span className="payment-method-mark">{Icon ? <Icon aria-hidden="true" /> : <b>{mark}</b>}</span>
             <span>{label}</span><ChevronRight aria-hidden="true" />
           </label>)}
         </div>
-          {notice ? <p role="status" className="payment-notice">To jest podgląd płatności. Pobieranie pieniędzy nie jest jeszcze aktywne.</p> : <Button type="button" className="payment-submit" onClick={() => setNotice(true)}>Zapłać i złóż zamówienie <ArrowRight aria-hidden="true" /></Button>}
+          <Button type="button" className="payment-submit" onClick={() => {
+            window.sessionStorage.setItem(ORDER_PLACED_KEY, "1");
+            window.sessionStorage.setItem(ORDER_NUMBER_KEY, `#${Math.floor(1000 + Math.random() * 9000)}`);
+            navigate({ to: "/potwierdzenie" });
+          }}>Zapłać i złóż zamówienie <ArrowRight aria-hidden="true" /></Button>
         </section>
       </div>
       <aside className="payment-right">
