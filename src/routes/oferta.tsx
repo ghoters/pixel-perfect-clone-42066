@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import {
   ArrowRight,
   Check,
@@ -166,6 +166,8 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
     "bg-muted-foreground/30 text-muted-foreground";
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const handleCommit = () => {
     if (textInput?.value.trim()) {
       textInput.onCommit();
@@ -177,6 +179,25 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
   // row to the bottom edge of the card (full inner width) and reserve the space
   // for it in the column padding.
   const absStrip = Boolean(textInput && fullBackground);
+  // The pinned input row must not run past the card title: it stops where the
+  // title text ends, so the row reads as part of the text column, not the photo.
+  const [stripMaxWidth, setStripMaxWidth] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    if (!absStrip) return;
+    const card = containerRef.current;
+    const title = titleRef.current;
+    const strip = stripRef.current;
+    if (!card || !title || !strip) return;
+    const measure = () => {
+      const titleBox = title.getBoundingClientRect();
+      const stripBox = strip.getBoundingClientRect();
+      setStripMaxWidth(Math.max(0, Math.round(titleBox.right - stripBox.left)));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [absStrip]);
   const priceLines = (priceLabel ?? (price ? `+ ${price} zł` : "Cena podstawowa")).split("\n");
   const textInputPrice = textInput ? (
     <span className={`pt-3 text-xs font-bold ${priceViolet ? "text-primary" : ""} ${fullBackground ? "[&>span]:whitespace-normal" : ""}`}>
@@ -278,7 +299,7 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       {recommended && <RecommendedBadge className={recommendedClasses} />}
       {imageSide === "left" && slot}
       <div className={`relative flex min-w-0 flex-1 flex-col items-start ${imageContain ? "max-w-[76%] pr-0" : priceCentered ? "pr-0" : "pr-5"} ${absStrip ? (recommended && imageSide === "right" ? "pt-[10px] pb-[38px]" : "pt-1 pb-[38px]") : recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "py-1"}`}>
-        <div className="flex items-start gap-2 text-sm font-extrabold leading-tight">{Icon && <Icon className="size-4 shrink-0 text-primary" />}<span className={titleNowrap ? "whitespace-nowrap" : "whitespace-pre-line"}>{title}</span></div>
+        <div className="flex items-start gap-2 text-sm font-extrabold leading-tight">{Icon && <Icon className="size-4 shrink-0 text-primary" />}<span ref={titleRef} className={titleNowrap ? "whitespace-nowrap" : "whitespace-pre-line"}>{title}</span></div>
         <p className={`${matchBadgePadding ? "mt-[14px]" : "mt-2"} text-xs font-normal leading-5 text-muted-foreground`}>{text}</p>
         {textInput ? (
           absStrip ? (
@@ -323,7 +344,11 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
       </div>
       {imageSide === "right" && slot}
       {absStrip && (
-        <div className="absolute inset-x-3.5 bottom-3.5 z-10 flex flex-col">{textInputTrigger}{textInputEditor}{textInputChip}</div>
+        <div
+          ref={stripRef}
+          className="absolute inset-x-3.5 bottom-3.5 z-10 flex flex-col"
+          style={stripMaxWidth !== null ? { maxWidth: stripMaxWidth } : undefined}
+        >{textInputTrigger}{textInputEditor}{textInputChip}</div>
       )}
       <span className={`absolute right-3 top-3 size-4 rounded-full border ${selected ? "border-primary bg-primary ring-2 ring-card" : "border-border bg-card"}`} />
     </div>
